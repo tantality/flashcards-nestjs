@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { PipeTransform, Injectable, ArgumentMetadata, BadRequestException } from '@nestjs/common';
+import { PipeTransform, Injectable, ArgumentMetadata } from '@nestjs/common';
 import { ClassConstructor, plainToClass } from 'class-transformer';
 import { validate, ValidationError, ValidatorOptions } from 'class-validator';
 import { Types } from 'mongoose';
+import { ValidationException } from '../exceptions';
 
 @Injectable()
 export class ValidationPipe implements PipeTransform<any, any> {
@@ -13,7 +14,7 @@ export class ValidationPipe implements PipeTransform<any, any> {
     const errors = await validate(typedValue, this.validatorOptions);
 
     if (errors.length) {
-      throw new BadRequestException(groupErrorMessagesByPropertyName(errors));
+      throw new ValidationException(groupErrorMessagesByPropertyName(errors));
     }
 
     return typedValue;

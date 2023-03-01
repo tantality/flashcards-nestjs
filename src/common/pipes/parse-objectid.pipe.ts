@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { PipeTransform, Injectable, BadRequestException, ArgumentMetadata } from '@nestjs/common';
+import { PipeTransform, Injectable, ArgumentMetadata } from '@nestjs/common';
 import { Types } from 'mongoose';
+import { ValidationException } from '../exceptions';
 
 @Injectable()
 export class ParseObjectIdPipe implements PipeTransform<any, Types.ObjectId> {
@@ -9,7 +10,7 @@ export class ParseObjectIdPipe implements PipeTransform<any, Types.ObjectId> {
     const argumentName = metadata.data;
 
     if (!validObjectId) {
-      throw new BadRequestException(`${argumentName} must be a mongodb id`);
+      throw new ValidationException([`${argumentName} must be a mongodb id`]);
     }
 
     return new Types.ObjectId(value);

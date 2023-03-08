@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { PipeTransform, Injectable, ArgumentMetadata } from '@nestjs/common';
+import { PipeTransform, Injectable, ArgumentMetadata, ValidationPipeOptions } from '@nestjs/common';
 import { ClassConstructor, plainToClass } from 'class-transformer';
-import { validate, ValidationError, ValidatorOptions } from 'class-validator';
-import { Types } from 'mongoose';
+import { validate, ValidationError } from 'class-validator';
 import { ValidationException } from '../exceptions';
 
 @Injectable()
 export class ValidationPipe implements PipeTransform<any, any> {
-  constructor(private validatorOptions: ValidatorOptions = {}) {}
+  constructor(private validationOptions: ValidationPipeOptions = {}) {}
 
-  async transform(value: any, metadata: ArgumentMetadata): Promise<Types.ObjectId> {
-    const typedValue = plainToClass(metadata.metatype as ClassConstructor<any>, value);
-    const errors = await validate(typedValue, this.validatorOptions);
+  async transform(value: any, { metatype }: ArgumentMetadata): Promise<any> {
+    const typedValue = plainToClass(metatype as ClassConstructor<any>, value);
+    const errors = await validate(typedValue, this.validationOptions);
 
     if (errors.length) {
       throw new ValidationException(groupErrorMessagesByPropertyName(errors));

@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { PipeTransform, Injectable, ArgumentMetadata, ValidationPipeOptions } from '@nestjs/common';
 import { ClassConstructor, plainToClass } from 'class-transformer';
-import { validate, ValidationError } from 'class-validator';
+import { validate } from 'class-validator';
 import { ValidationException } from '../exceptions';
+import { groupValidationErrorMessagesByPropertyName } from '../utils';
 
 @Injectable()
 export class ValidationPipe implements PipeTransform<any, any> {
@@ -13,16 +14,9 @@ export class ValidationPipe implements PipeTransform<any, any> {
     const errors = await validate(typedValue, this.validationOptions);
 
     if (errors.length) {
-      throw new ValidationException(groupErrorMessagesByPropertyName(errors));
+      throw new ValidationException(groupValidationErrorMessagesByPropertyName(errors));
     }
 
     return typedValue;
   }
 }
-
-const groupErrorMessagesByPropertyName = (errors: ValidationError[]): string[] => {
-  return errors.map((error) => {
-    const groupedMessages = Object.values(error.constraints as object).join('. ');
-    return groupedMessages;
-  });
-};

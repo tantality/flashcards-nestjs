@@ -32,7 +32,8 @@ export class LanguagesRepository {
   };
 
   findOne = async (condition: FilterQuery<Language>): Promise<Language | null> => {
-    return this.mockLanguage;
+    const language = await this.languageModel.findOne(condition);
+    return language;
   };
 
   delete = async (id: ObjectId): Promise<void> => {};

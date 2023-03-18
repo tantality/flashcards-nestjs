@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Controller } from '@nestjs/common';
+import { Controller, NotFoundException } from '@nestjs/common';
 import { Body, Delete, Get, Param, Patch, Post, Query, UseInterceptors } from '@nestjs/common/decorators';
 import { ObjectId } from 'mongoose';
+import { LanguageExceptionMessages } from 'src/common/constants';
 import { SerializerInterceptor } from 'src/common/interceptors';
 import { ParseObjectIdPipe } from '../common/pipes';
 import { CreateLanguageDto, GetAllLanguagesQueryDto, LanguageResponseDto, UpdateLanguageDto } from './dto';
@@ -22,7 +23,11 @@ export class LanguagesController {
   @Get(':id')
   @UseInterceptors(new SerializerInterceptor(LanguageResponseDto))
   async getLanguage(@Param('id', ParseObjectIdPipe) id: ObjectId): Promise<LanguageResponseDto> {
-    const language = (await this.languagesService.findOne(id)) as Language;
+    const language = await this.languagesService.findOne({ _id: id });
+    if (!language) {
+      throw new NotFoundException(LanguageExceptionMessages.NOT_FOUND);
+    }
+
     return language;
   }
 

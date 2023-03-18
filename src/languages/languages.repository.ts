@@ -41,5 +41,7 @@ export class LanguagesRepository {
     return language;
   };
 
-  delete = async (id: ObjectId): Promise<void> => {};
+  delete = async (id: ObjectId): Promise<void> => {
+    await this.languageModel.deleteOne({ _id: id });
+  };
 }

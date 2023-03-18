@@ -49,6 +49,7 @@ export class LanguagesController {
   }
 
   @Delete(':id')
-  async deleteLanguage(@Param('id', ParseObjectIdPipe) id: ObjectId): Promise<void> {}
+  async deleteLanguage(@Param('id', ParseObjectIdPipe) id: ObjectId): Promise<void> {
+    await this.languagesService.delete(id);
+  }
 }
-

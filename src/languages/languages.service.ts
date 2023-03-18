@@ -43,6 +43,11 @@ export class LanguagesService {
   };
 
   delete = async (id: ObjectId): Promise<void> => {
+    const languageToDelete = await this.findOne({ _id: id });
+    if (!languageToDelete) {
+      throw new NotFoundException(LanguageExceptionMessages.NOT_FOUND);
+    }
+
     await this.languagesRepository.delete(id);
   };
 

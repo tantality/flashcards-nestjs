@@ -24,7 +24,8 @@ export class LanguagesRepository {
   };
 
   create = async (createLanguageDto: CreateLanguageDto): Promise<Language> => {
-    return this.mockLanguage;
+    const createdLanguage = await this.languageModel.create(createLanguageDto);
+    return createdLanguage;
   };
 
   update = async (id: ObjectId, updateLanguageDto: UpdateLanguageDto): Promise<Language> => {

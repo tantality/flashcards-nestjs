@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { ObjectId, FilterQuery } from 'mongoose';
 import { LanguageExceptionMessages } from 'src/common/constants';
 import { CreateLanguageDto, GetAllLanguagesQueryDto, UpdateLanguageDto } from './dto';
@@ -26,7 +26,19 @@ export class LanguagesService {
   };
 
   update = async (id: ObjectId, updateLanguageDto: UpdateLanguageDto): Promise<Language> => {
+    const languageToUpdate = await this.findOne({ _id: id });
+    if (!languageToUpdate) {
+      throw new NotFoundException(LanguageExceptionMessages.NOT_FOUND);
+    }
+
+    const { code } = updateLanguageDto;
+    const language = code && (await this.findOne({ code }));
+    if (language) {
+      throw new BadRequestException(LanguageExceptionMessages.ALREADY_EXISTS);
+    }
+
     const updatedLanguage = await this.languagesRepository.update(id, updateLanguageDto);
+
     return updatedLanguage;
   };
 

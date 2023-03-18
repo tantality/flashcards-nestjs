@@ -29,7 +29,11 @@ export class LanguagesRepository {
   };
 
   update = async (id: ObjectId, updateLanguageDto: UpdateLanguageDto): Promise<Language> => {
-    return this.mockLanguage;
+    await this.languageModel.updateOne({ _id: id }, { ...updateLanguageDto });
+
+    const updatedLanguage = (await this.findOne({ _id: id })) as Language;
+
+    return updatedLanguage;
   };
 
   findOne = async (condition: FilterQuery<Language>): Promise<Language | null> => {

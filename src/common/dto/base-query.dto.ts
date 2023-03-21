@@ -1,7 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsIn, IsNumber, IsOptional, IsString, Length, Max, Min } from 'class-validator';
 import { RemoveExtraSpaces, ToLowerCase } from '../decorators';
-import { SORT_DIRECTION } from '../types';
 import {
   DEFAULT_LIMIT,
   DEFAULT_OFFSET,
@@ -10,7 +9,8 @@ import {
   MIN_INT,
   MIN_LIMIT,
   MIN_STRING_LENGTH,
-} from '../constants/validations.constants';
+  SORT_DIRECTION,
+} from '../constants';
 
 export class BaseQueryDto {
   @Length(MIN_STRING_LENGTH, MAX_STRING_LENGTH)

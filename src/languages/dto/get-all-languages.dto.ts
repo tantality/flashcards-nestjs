@@ -1,15 +1,11 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsIn } from 'class-validator';
 import { MAX_STRING_LENGTH, MIN_STRING_LENGTH } from 'src/common/constants';
-import { RemoveExtraSpaces, ToLowerCase } from 'src/common/decorators';
 import { BaseQueryDto } from 'src/common/dto';
 import { LANGUAGE_SORT_BY } from '../languages.constants';
 
 export class GetAllLanguagesQueryDto extends BaseQueryDto {
-  @ApiPropertyOptional({ description: 'The field by which sorting will be performed' })
   @IsIn(Object.values(LANGUAGE_SORT_BY))
-  @RemoveExtraSpaces()
-  @ToLowerCase()
   readonly sortBy: string = LANGUAGE_SORT_BY.DATE;
 
   @ApiPropertyOptional({

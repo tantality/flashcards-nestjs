@@ -22,20 +22,20 @@ export class BaseQueryDto {
   @IsOptional()
   readonly search: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ description: `The number of items to skip before starting to collect the result set \n\nMin: ${MIN_INT}` })
   @Min(MIN_INT)
   @Type(() => Number)
   @IsNumber()
   readonly offset: number = DEFAULT_OFFSET;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ description: `The number of items to return \n\nMin value:${MIN_LIMIT}, max value:${MAX_LIMIT}` })
   @Max(MAX_LIMIT)
   @Min(MIN_LIMIT)
   @Type(() => Number)
   @IsNumber()
   readonly limit: number = DEFAULT_LIMIT;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ description: 'The sorting direction' })
   @IsIn(Object.values(SORT_DIRECTION))
   @ToLowerCase()
   @RemoveExtraSpaces()

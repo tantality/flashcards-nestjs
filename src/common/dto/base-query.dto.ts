@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsIn, IsNumber, IsOptional, IsString, Length, Max, Min } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { RemoveExtraSpaces, ToLowerCase } from '../decorators';
 import {
   DEFAULT_LIMIT,
@@ -13,6 +14,7 @@ import {
 } from '../constants';
 
 export class BaseQueryDto {
+  @ApiPropertyOptional()
   @Length(MIN_STRING_LENGTH, MAX_STRING_LENGTH)
   @ToLowerCase()
   @RemoveExtraSpaces()
@@ -20,17 +22,20 @@ export class BaseQueryDto {
   @IsOptional()
   readonly search: string;
 
+  @ApiPropertyOptional()
   @Min(MIN_INT)
   @Type(() => Number)
   @IsNumber()
   readonly offset: number = DEFAULT_OFFSET;
 
+  @ApiPropertyOptional()
   @Max(MAX_LIMIT)
   @Min(MIN_LIMIT)
   @Type(() => Number)
   @IsNumber()
   readonly limit: number = DEFAULT_LIMIT;
 
+  @ApiPropertyOptional()
   @IsIn(Object.values(SORT_DIRECTION))
   @ToLowerCase()
   @RemoveExtraSpaces()

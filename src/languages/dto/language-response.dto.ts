@@ -34,9 +34,11 @@ export class LanguageResponseDto {
 
 @Exclude()
 export class AllLanguagesResponseDto {
+  @ApiProperty({ description: 'The count of languages corresponding to the filtering condition in the query', example: 1 })
   @Expose()
   readonly count: number;
 
+  @ApiProperty({ description: 'The list of languages', type: [LanguageResponseDto] })
   @Expose()
   @Type(() => LanguageResponseDto)
   readonly languages: Language[];

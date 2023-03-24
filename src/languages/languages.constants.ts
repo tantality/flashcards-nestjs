@@ -16,8 +16,8 @@ export enum LANGUAGE_DTO_PROPERTY_EXAMPLES {
 }
 
 export enum LANGUAGE_DTO_PROPERTY_DESCRIPTIONS {
-  ID = 'the id of the language ',
-  NAME = 'the name of the language ',
-  CODE = 'the code of the language ',
-  CREATED_AT = 'the language creation date ',
+  ID = 'The id of the language ',
+  NAME = 'The name of the language ',
+  CODE = 'The code of the language ',
+  CREATED_AT = 'The language creation date ',
 }

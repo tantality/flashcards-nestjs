@@ -1,12 +1,13 @@
 import { Controller, NotFoundException } from '@nestjs/common';
 import { Body, Delete, Get, Param, Patch, Post, Query, UseInterceptors } from '@nestjs/common/decorators';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
-import { LanguageExceptionMessages } from 'src/common/constants';
+import { CONTROLLER_HANDLERS_ACTIONS, LanguageExceptionMessages } from 'src/common/constants';
 import { SerializerInterceptor } from 'src/common/interceptors';
 import { ParseObjectIdPipe } from '../common/pipes';
 import { CreateLanguageDto, GetAllLanguagesQueryDto, LanguageResponseDto, UpdateLanguageDto } from './dto';
 import { Language } from './language.schema';
+import { LANGUAGE_DTO_PROPERTY_DESCRIPTIONS } from './languages.constants';
 import { LanguagesService } from './languages.service';
 
 @ApiTags('languages')
@@ -23,6 +24,7 @@ export class LanguagesController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a language' })
+  @ApiParam({ name: 'id', type: String, description: LANGUAGE_DTO_PROPERTY_DESCRIPTIONS.ID + CONTROLLER_HANDLERS_ACTIONS.GET })
   @UseInterceptors(new SerializerInterceptor(LanguageResponseDto))
   async getLanguage(@Param('id', ParseObjectIdPipe) id: ObjectId): Promise<LanguageResponseDto> {
     const language = await this.languagesService.findOne({ _id: id });
@@ -43,6 +45,7 @@ export class LanguagesController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update an existing language' })
+  @ApiParam({ name: 'id', type: String, description: LANGUAGE_DTO_PROPERTY_DESCRIPTIONS.ID + CONTROLLER_HANDLERS_ACTIONS.UPDATE })
   @UseInterceptors(new SerializerInterceptor(LanguageResponseDto))
   async updateLanguage(
     @Param('id', ParseObjectIdPipe) id: ObjectId,
@@ -54,6 +57,7 @@ export class LanguagesController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a language' })
+  @ApiParam({ name: 'id', type: String, description: LANGUAGE_DTO_PROPERTY_DESCRIPTIONS.ID + CONTROLLER_HANDLERS_ACTIONS.DELETE })
   async deleteLanguage(@Param('id', ParseObjectIdPipe) id: ObjectId): Promise<void> {
     await this.languagesService.delete(id);
   }

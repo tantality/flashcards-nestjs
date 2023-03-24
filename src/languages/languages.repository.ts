@@ -2,14 +2,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ObjectId, FilterQuery, Model, Aggregate } from 'mongoose';
-import { CreateLanguageDto, GetAllLanguagesQueryDto, UpdateLanguageDto } from './dto';
+import { AllLanguagesResponseDto, CreateLanguageDto, GetAllLanguagesQueryDto, UpdateLanguageDto } from './dto';
 import { Language, LanguageDocument } from './language.schema';
 
 @Injectable()
 export class LanguagesRepository {
   constructor(@InjectModel(Language.name) private languageModel: Model<LanguageDocument>) {}
 
-  findAndCountAll = async (query: GetAllLanguagesQueryDto): Promise<{ count: number; languages: Language[] }> => {
+  findAndCountAll = async (query: GetAllLanguagesQueryDto): Promise<AllLanguagesResponseDto> => {
     const { search, sortBy, sortDirection, limit, offset } = query;
 
     const findingCondition = this.createFindingConditionForLanguages(search);

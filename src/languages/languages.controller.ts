@@ -5,8 +5,7 @@ import { ObjectId } from 'mongoose';
 import { CONTROLLER_HANDLERS_ACTIONS, LanguageExceptionMessages } from 'src/common/constants';
 import { SerializerInterceptor } from 'src/common/interceptors';
 import { ParseObjectIdPipe } from '../common/pipes';
-import { CreateLanguageDto, GetAllLanguagesQueryDto, LanguageResponseDto, UpdateLanguageDto } from './dto';
-import { Language } from './language.schema';
+import { AllLanguagesResponseDto, CreateLanguageDto, GetAllLanguagesQueryDto, LanguageResponseDto, UpdateLanguageDto } from './dto';
 import { LANGUAGE_DTO_PROPERTY_DESCRIPTIONS } from './languages.constants';
 import { LanguagesService } from './languages.service';
 
@@ -17,7 +16,7 @@ export class LanguagesController {
 
   @Get()
   @ApiOperation({ summary: 'Get a list of languages' })
-  async getAllLanguages(@Query() query: GetAllLanguagesQueryDto): Promise<{ count: number; languages: Language[] }> {
+  async getAllLanguages(@Query() query: GetAllLanguagesQueryDto): Promise<AllLanguagesResponseDto> {
     const languagesAndTheirCount = await this.languagesService.findAndCountAll(query);
     return languagesAndTheirCount;
   }

@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Expose, Exclude, instanceToPlain, Transform } from 'class-transformer';
+import { Expose, Exclude, instanceToPlain, Transform, Type } from 'class-transformer';
 import { ObjectId } from 'mongoose';
+import { Language } from '../language.schema';
 import { LANGUAGE_DTO_PROPERTY_DESCRIPTIONS, LANGUAGE_DTO_PROPERTY_EXAMPLES } from '../languages.constants';
 
 @Exclude()
@@ -28,5 +29,19 @@ export class LanguageResponseDto {
 
   toJSON?(): Record<string, any> {
     return instanceToPlain(this);
+  }
+}
+
+@Exclude()
+export class AllLanguagesResponseDto {
+  @Expose()
+  readonly count: number;
+
+  @Expose()
+  @Type(() => LanguageResponseDto)
+  readonly languages: Language[];
+
+  constructor(partial: Partial<AllLanguagesResponseDto>) {
+    Object.assign(this, partial);
   }
 }

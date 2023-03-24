@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable require-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { ObjectId, FilterQuery, Model } from 'mongoose';
+import { ObjectId, FilterQuery, Model, Aggregate } from 'mongoose';
 import { CreateLanguageDto, GetAllLanguagesQueryDto, UpdateLanguageDto } from './dto';
 import { Language, LanguageDocument } from './language.schema';
 
@@ -11,16 +9,43 @@ import { Language, LanguageDocument } from './language.schema';
 export class LanguagesRepository {
   constructor(@InjectModel(Language.name) private languageModel: Model<LanguageDocument>) {}
 
-  mockLanguage: Language = {
-    _id: '21' as unknown as ObjectId,
-    code: 'eng',
-    name: 'english',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  } as Language;
-
   findAndCountAll = async (query: GetAllLanguagesQueryDto): Promise<{ count: number; languages: Language[] }> => {
-    return { count: 2, languages: [this.mockLanguage] };
+    const { search, sortBy, sortDirection, limit, offset } = query;
+
+    const findingCondition = this.createFindingConditionForLanguages(search);
+
+    const languagesCountPromise = this.countAll(findingCondition);
+    const languagesAggregate: Aggregate<Language[]> = this.languageModel.aggregate([
+      { $match: findingCondition },
+      { $skip: offset },
+      { $limit: limit },
+    ]);
+
+    const [count, languages] = await Promise.all([languagesCountPromise, languagesAggregate]);
+
+    return { count, languages };
+  };
+
+  private createFindingConditionForLanguages = (search?: string): FilterQuery<Language> => {
+    const searchByNameCondition = this.createSearchByNameCondition(search);
+
+    const condition: FilterQuery<Language> = {
+      ...searchByNameCondition,
+    };
+
+    return condition;
+  };
+
+  private createSearchByNameCondition = (search?: string): FilterQuery<Language> => {
+    const searchCondition = search ? { $regex: new RegExp(search, 'i') } : null;
+    const searchByNameCondition = searchCondition ? { name: searchCondition } : {};
+
+    return searchByNameCondition;
+  };
+
+  countAll = async (condition: FilterQuery<Language>): Promise<number> => {
+    const count = await this.languageModel.where(condition).countDocuments();
+    return count;
   };
 
   create = async (createLanguageDto: CreateLanguageDto): Promise<Language> => {

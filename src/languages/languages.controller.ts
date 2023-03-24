@@ -16,6 +16,7 @@ export class LanguagesController {
 
   @Get()
   @ApiOperation({ summary: 'Get a list of languages' })
+  @UseInterceptors(new SerializerInterceptor(AllLanguagesResponseDto))
   async getAllLanguages(@Query() query: GetAllLanguagesQueryDto): Promise<AllLanguagesResponseDto> {
     const languagesAndTheirCount = await this.languagesService.findAndCountAll(query);
     return languagesAndTheirCount;

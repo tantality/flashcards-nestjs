@@ -7,6 +7,8 @@ export type LanguageDocument = HydratedDocument<Language>;
 
 @Schema(SCHEMA_OPTIONS)
 export class Language extends CommonSchemaProperties {
+  nameInLowercase: string;
+
   @Prop({ required: true })
     name: string;
 

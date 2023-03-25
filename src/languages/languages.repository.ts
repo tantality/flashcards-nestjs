@@ -1,22 +1,32 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ObjectId, FilterQuery, Model, Aggregate } from 'mongoose';
+import { SORT_DIRECTION } from 'src/common/constants';
+import { SortingConditionWithDirectionAsNumber } from 'src/common/types';
+import { getSortDirectionAsNumber } from 'src/common/utils';
 import { AllLanguagesResponseDto, CreateLanguageDto, GetAllLanguagesQueryDto, UpdateLanguageDto } from './dto';
 import { Language, LanguageDocument } from './language.schema';
+import { LANGUAGE_SORT_BY } from './languages.constants';
 
 @Injectable()
 export class LanguagesRepository {
+  static LANGUAGE_FIELD_SELECTION_CONFIG: Record<string, number> = { _id: 1, code: 1, name: 1, createdAt: 1 };
+
   constructor(@InjectModel(Language.name) private languageModel: Model<LanguageDocument>) {}
 
   findAndCountAll = async (query: GetAllLanguagesQueryDto): Promise<AllLanguagesResponseDto> => {
     const { search, sortBy, sortDirection, limit, offset } = query;
 
     const findingCondition = this.createFindingConditionForLanguages(search);
+    const sortingCondition = this.createSortingConditionForLanguages(sortBy, sortDirection);
 
     const languagesCountPromise = this.countAll(findingCondition);
     const languagesAggregate: Aggregate<Language[]> = this.languageModel.aggregate([
       { $match: findingCondition },
+      { $addFields: { nameInLowercase: { $toLower: '$name' } } },
+      { $project: { ...LanguagesRepository.LANGUAGE_FIELD_SELECTION_CONFIG, nameInLowercase: 1 } },
+      { $sort: sortingCondition },
+      { $unset: ['nameInLowercase'] },
       { $skip: offset },
       { $limit: limit },
     ]);
@@ -41,6 +51,27 @@ export class LanguagesRepository {
     const searchByNameCondition = searchCondition ? { name: searchCondition } : {};
 
     return searchByNameCondition;
+  };
+
+  private createSortingConditionForLanguages = (
+    sortBy: LANGUAGE_SORT_BY,
+    sortDirection: SORT_DIRECTION,
+  ): SortingConditionWithDirectionAsNumber<Language> => {
+    let sortingCondition: SortingConditionWithDirectionAsNumber<Language> = {};
+    const sortDirectionAsNumber = getSortDirectionAsNumber(sortDirection);
+
+    switch (sortBy) {
+    case LANGUAGE_SORT_BY.NAME: {
+      sortingCondition = { nameInLowercase: sortDirectionAsNumber };
+      break;
+    }
+    case LANGUAGE_SORT_BY.DATE: {
+      sortingCondition = { createdAt: sortDirectionAsNumber };
+      break;
+    }
+    }
+
+    return sortingCondition;
   };
 
   countAll = async (condition: FilterQuery<Language>): Promise<number> => {

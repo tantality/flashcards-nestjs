@@ -29,3 +29,9 @@ export enum AuthExceptionMessages {
   REFRESH_TOKEN_IS_MISSING = 'Refresh token is missing.',
   REFRESH_TOKEN_IS_INVALID = 'Refresh token is invalid.',
 }
+
+export enum RESPONSE_STATUS_DESCRIPTIONS {
+  BAD_REQUEST = 'Bad request',
+  NO_CONTENT = 'Ok, no content to return',
+  NOT_FOUND = 'Resource not found',
+}

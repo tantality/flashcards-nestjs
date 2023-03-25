@@ -40,7 +40,7 @@ export class BaseQueryDto {
   @ToLowerCase()
   @RemoveExtraSpaces()
   @IsString()
-  readonly sortDirection: string = SORT_DIRECTION.ASC;
+  readonly sortDirection: SORT_DIRECTION = SORT_DIRECTION.ASC;
 
   @ApiPropertyOptional({ description: 'The field by which sorting will be performed' })
   @RemoveExtraSpaces()

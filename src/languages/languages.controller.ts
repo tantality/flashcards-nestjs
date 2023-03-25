@@ -2,7 +2,7 @@ import { Controller, HttpStatus, NotFoundException } from '@nestjs/common';
 import { Body, Delete, Get, HttpCode, Param, Patch, Post, Query, UseInterceptors } from '@nestjs/common/decorators';
 import { ApiBadRequestResponse, ApiNoContentResponse, ApiNotFoundResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
-import { CONTROLLER_HANDLERS_ACTIONS, LanguageExceptionMessages, RESPONSE_STATUS_DESCRIPTIONS } from 'src/common/constants';
+import { CONTROLLER_HANDLERS_ACTIONS, LANGUAGE_EXCEPTION_MESSAGES, RESPONSE_STATUS_DESCRIPTIONS } from 'src/common/constants';
 import { SerializerInterceptor } from 'src/common/interceptors';
 import { ParseObjectIdPipe } from '../common/pipes';
 import { AllLanguagesResponseDto, CreateLanguageDto, GetAllLanguagesQueryDto, LanguageResponseDto, UpdateLanguageDto } from './dto';
@@ -32,7 +32,7 @@ export class LanguagesController {
   async getLanguage(@Param('id', ParseObjectIdPipe) id: ObjectId): Promise<LanguageResponseDto> {
     const language = await this.languagesService.findOne({ _id: id });
     if (!language) {
-      throw new NotFoundException(LanguageExceptionMessages.NOT_FOUND);
+      throw new NotFoundException(LANGUAGE_EXCEPTION_MESSAGES.NOT_FOUND);
     }
 
     return language;

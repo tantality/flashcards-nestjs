@@ -4,7 +4,7 @@ import { ApiBadRequestResponse, ApiNoContentResponse, ApiNotFoundResponse, ApiOp
 import { ObjectId } from 'mongoose';
 import { CONTROLLER_HANDLERS_ACTIONS, LANGUAGE_EXCEPTION_MESSAGES, RESPONSE_STATUS_DESCRIPTIONS } from 'src/common/constants';
 import { SerializerInterceptor } from 'src/common/interceptors';
-import { ParseObjectIdPipe } from '../common/pipes';
+import { ParseObjectIdPipe } from 'src/common/pipes';
 import { AllLanguagesResponseDto, CreateLanguageDto, GetAllLanguagesQueryDto, LanguageResponseDto, UpdateLanguageDto } from './dto';
 import { LANGUAGE_DTO_PROPERTY_DESCRIPTIONS } from './languages.constants';
 import { LanguagesService } from './languages.service';

@@ -1,9 +1,8 @@
 import { ObjectId } from 'mongoose';
 
-export class CreateUserDto {
+export class UserResponseDto {
+  readonly _id: ObjectId;
   readonly name: string;
   readonly email: string;
-  readonly normalizedEmail: string;
-  readonly password: string;
   readonly nativeLanguageId: ObjectId;
 }

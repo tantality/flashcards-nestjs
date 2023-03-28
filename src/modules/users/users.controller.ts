@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Controller, Get, Body, Patch } from '@nestjs/common';
+import { Controller, Get, Body, Patch, NotFoundException, UseInterceptors } from '@nestjs/common';
 import { ObjectId } from 'mongoose';
+import { USER_EXCEPTION_MESSAGES } from 'src/common/constants';
+import { SerializerInterceptor } from 'src/common/interceptors';
 import { UsersService } from './users.service';
-import { UpdateUserDto } from './dto';
+import { UpdateUserDto, UserResponseDto } from './dto';
 
 @Controller('users')
 export class UsersController {
@@ -12,12 +12,20 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get('me')
-  getUser() {
-    return this.usersService.findOne({ id: this.MOCK_USER_ID });
+  @UseInterceptors(new SerializerInterceptor(UserResponseDto))
+  async getUser(): Promise<UserResponseDto> {
+    const user = await this.usersService.findOne({ id: this.MOCK_USER_ID });
+    if (!user) {
+      throw new NotFoundException(USER_EXCEPTION_MESSAGES.NOT_FOUND);
+    }
+
+    return user;
   }
 
   @Patch('me')
-  updateUser(@Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(this.MOCK_USER_ID, updateUserDto);
+  @UseInterceptors(new SerializerInterceptor(UserResponseDto))
+  async updateUser(@Body() updateUserDto: UpdateUserDto): Promise<UserResponseDto> {
+    const updatedLanguage = await this.usersService.update(this.MOCK_USER_ID, updateUserDto);
+    return updatedLanguage;
   }
 }

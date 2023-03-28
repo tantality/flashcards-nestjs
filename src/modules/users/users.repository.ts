@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable no-return-await */
-/* eslint-disable quotes */
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model, ObjectId } from 'mongoose';
@@ -14,16 +9,21 @@ import { User, UserDocument } from './user.schema';
 export class UsersRepository {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  create(createUserDto: CreateUserDto) {
-    return `This action create a user`;
-  }
+  create = async (createUserDto: CreateUserDto): Promise<User> => {
+    const createdUser = await this.userModel.create(createUserDto);
+    return createdUser;
+  };
 
-  update(id: ObjectId, updateUserDto: UpdateUserDto) {
-    return `This action update a user`;
-  }
+  update = async (id: ObjectId, updateUserDto: UpdateUserDto): Promise<User> => {
+    await this.userModel.updateOne({ _id: id }, { ...updateUserDto });
 
-  findOne(condition: FilterQuery<User>) {
-    return `This action returns a user`;
-  }
+    const updatedUser = (await this.findOne({ _id: id })) as User;
+
+    return updatedUser;
+  };
+
+  findOne = async (condition: FilterQuery<User>): Promise<User | null> => {
+    const user = await this.userModel.findOne(condition);
+    return user;
+  };
 }
-

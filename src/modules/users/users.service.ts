@@ -2,8 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { FilterQuery, ObjectId } from 'mongoose';
 import { LANGUAGE_EXCEPTION_MESSAGES, USER_EXCEPTION_MESSAGES } from 'src/common/constants';
 import { LanguagesService } from '../languages/languages.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto, UpdateUserDto } from './dto';
 import { User } from './user.schema';
 import { UsersRepository } from './users.repository';
 

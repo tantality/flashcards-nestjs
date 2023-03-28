@@ -3,7 +3,7 @@
 import { Controller, Get, Body, Patch } from '@nestjs/common';
 import { ObjectId } from 'mongoose';
 import { UsersService } from './users.service';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserDto } from './dto';
 
 @Controller('users')
 export class UsersController {
@@ -21,4 +21,3 @@ export class UsersController {
     return this.usersService.update(this.MOCK_USER_ID, updateUserDto);
   }
 }
-

@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { ObjectId, FilterQuery } from 'mongoose';
-import { LANGUAGE_EXCEPTION_MESSAGES } from 'src/common/constants';
+import { LANGUAGE_EXCEPTION_MESSAGE } from 'src/common/constants';
 import { AllLanguagesResponseDto, CreateLanguageDto, GetAllLanguagesQueryDto, UpdateLanguageDto } from './dto';
 import { Language } from './language.schema';
 import { LanguagesRepository } from './languages.repository';
@@ -17,7 +17,7 @@ export class LanguagesService {
   create = async (createLanguageDto: CreateLanguageDto): Promise<Language> => {
     const language = await this.findOne({ code: createLanguageDto.code });
     if (language) {
-      throw new BadRequestException(LANGUAGE_EXCEPTION_MESSAGES.ALREADY_EXISTS);
+      throw new BadRequestException(LANGUAGE_EXCEPTION_MESSAGE.ALREADY_EXISTS);
     }
 
     const createdLanguage = await this.languagesRepository.create(createLanguageDto);
@@ -28,13 +28,13 @@ export class LanguagesService {
   update = async (id: ObjectId, updateLanguageDto: UpdateLanguageDto): Promise<Language> => {
     const languageToUpdate = await this.findOne({ _id: id });
     if (!languageToUpdate) {
-      throw new NotFoundException(LANGUAGE_EXCEPTION_MESSAGES.NOT_FOUND);
+      throw new NotFoundException(LANGUAGE_EXCEPTION_MESSAGE.NOT_FOUND);
     }
 
     const { code } = updateLanguageDto;
     const language = code && (await this.findOne({ code }));
     if (language) {
-      throw new BadRequestException(LANGUAGE_EXCEPTION_MESSAGES.ALREADY_EXISTS);
+      throw new BadRequestException(LANGUAGE_EXCEPTION_MESSAGE.ALREADY_EXISTS);
     }
 
     const updatedLanguage = await this.languagesRepository.update(id, updateLanguageDto);
@@ -45,7 +45,7 @@ export class LanguagesService {
   delete = async (id: ObjectId): Promise<void> => {
     const languageToDelete = await this.findOne({ _id: id });
     if (!languageToDelete) {
-      throw new NotFoundException(LANGUAGE_EXCEPTION_MESSAGES.NOT_FOUND);
+      throw new NotFoundException(LANGUAGE_EXCEPTION_MESSAGE.NOT_FOUND);
     }
 
     await this.languagesRepository.delete(id);

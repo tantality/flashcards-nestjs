@@ -9,13 +9,13 @@ export enum LANGUAGE_SORT_BY {
   DATE = 'date',
 }
 
-export enum LANGUAGE_DTO_PROPERTY_EXAMPLES {
+export enum LANGUAGE_DTO_PROPERTY_EXAMPLE {
   ID = '63bca3bacef11ea37e9a4e53',
   NAME = 'english',
   CODE = 'en',
 }
 
-export enum LANGUAGE_DTO_PROPERTY_DESCRIPTIONS {
+export enum LANGUAGE_DTO_PROPERTY_DESCRIPTION {
   ID = 'The id of the language ',
   NAME = 'The name of the language ',
   CODE = 'The code of the language ',

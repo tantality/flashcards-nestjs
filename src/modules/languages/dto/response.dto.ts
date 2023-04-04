@@ -2,24 +2,24 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Exclude, instanceToPlain, Transform, Type } from 'class-transformer';
 import { ObjectId } from 'mongoose';
 import { Language } from '../language.schema';
-import { LANGUAGE_DTO_PROPERTY_DESCRIPTIONS, LANGUAGE_DTO_PROPERTY_EXAMPLES } from '../languages.constants';
+import { LANGUAGE_DTO_PROPERTY_DESCRIPTION, LANGUAGE_DTO_PROPERTY_EXAMPLE } from '../languages.constants';
 
 @Exclude()
 export class LanguageResponseDto {
-  @ApiProperty({ name: 'id', type: String, description: LANGUAGE_DTO_PROPERTY_DESCRIPTIONS.ID, example: LANGUAGE_DTO_PROPERTY_EXAMPLES.ID })
+  @ApiProperty({ name: 'id', type: String, description: LANGUAGE_DTO_PROPERTY_DESCRIPTION.ID, example: LANGUAGE_DTO_PROPERTY_EXAMPLE.ID })
   @Expose({ name: 'id' })
   @Transform(({ obj }) => obj._id.toString())
   readonly _id: ObjectId;
 
-  @ApiProperty({ description: LANGUAGE_DTO_PROPERTY_DESCRIPTIONS.NAME, example: LANGUAGE_DTO_PROPERTY_EXAMPLES.NAME })
+  @ApiProperty({ description: LANGUAGE_DTO_PROPERTY_DESCRIPTION.NAME, example: LANGUAGE_DTO_PROPERTY_EXAMPLE.NAME })
   @Expose()
   readonly name: string;
 
-  @ApiProperty({ description: LANGUAGE_DTO_PROPERTY_DESCRIPTIONS.CODE, example: LANGUAGE_DTO_PROPERTY_EXAMPLES.CODE })
+  @ApiProperty({ description: LANGUAGE_DTO_PROPERTY_DESCRIPTION.CODE, example: LANGUAGE_DTO_PROPERTY_EXAMPLE.CODE })
   @Expose()
   readonly code: string;
 
-  @ApiProperty({ description: LANGUAGE_DTO_PROPERTY_DESCRIPTIONS.CREATED_AT })
+  @ApiProperty({ description: LANGUAGE_DTO_PROPERTY_DESCRIPTION.CREATED_AT })
   @Expose()
   readonly createdAt: Date;
 

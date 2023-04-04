@@ -12,4 +12,3 @@ import { LanguagesService } from './languages.service';
   exports: [LanguagesService, MongooseModule],
 })
 export class LanguagesModule {}
-

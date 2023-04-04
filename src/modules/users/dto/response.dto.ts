@@ -19,7 +19,11 @@ export class UserResponseDto {
   @Expose()
   readonly email: string;
 
-  @ApiProperty({ type: String, description: USER_DTO_PROPERTY_DESCRIPTION.NATIVE_LANGUAGE_ID, example: USER_DTO_PROPERTY_EXAMPLE.NATIVE_LANGUAGE_ID })
+  @ApiProperty({
+    type: String,
+    description: USER_DTO_PROPERTY_DESCRIPTION.NATIVE_LANGUAGE_ID,
+    example: USER_DTO_PROPERTY_EXAMPLE.NATIVE_LANGUAGE_ID,
+  })
   @Expose()
   @ObjectIdToString()
   readonly nativeLanguageId: ObjectId;

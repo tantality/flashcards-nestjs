@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Expose, Exclude, instanceToPlain, Transform, Type } from 'class-transformer';
+import { Expose, Exclude, instanceToPlain, Type } from 'class-transformer';
 import { ObjectId } from 'mongoose';
+import { ObjectIdToString } from 'src/common/decorators';
 import { Language } from '../language.schema';
 import { LANGUAGE_DTO_PROPERTY_DESCRIPTIONS, LANGUAGE_DTO_PROPERTY_EXAMPLES } from '../languages.constants';
 
@@ -8,7 +9,7 @@ import { LANGUAGE_DTO_PROPERTY_DESCRIPTIONS, LANGUAGE_DTO_PROPERTY_EXAMPLES } fr
 export class LanguageResponseDto {
   @ApiProperty({ name: 'id', type: String, description: LANGUAGE_DTO_PROPERTY_DESCRIPTIONS.ID, example: LANGUAGE_DTO_PROPERTY_EXAMPLES.ID })
   @Expose({ name: 'id' })
-  @Transform(({ obj }) => obj._id.toString())
+  @ObjectIdToString()
   readonly _id: ObjectId;
 
   @ApiProperty({ description: LANGUAGE_DTO_PROPERTY_DESCRIPTIONS.NAME, example: LANGUAGE_DTO_PROPERTY_EXAMPLES.NAME })

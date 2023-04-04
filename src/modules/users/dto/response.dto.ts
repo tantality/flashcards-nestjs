@@ -1,10 +1,11 @@
-import { Exclude, Expose, instanceToPlain, Transform } from 'class-transformer';
+import { Exclude, Expose, instanceToPlain } from 'class-transformer';
 import { ObjectId } from 'mongoose';
+import { ObjectIdToString } from 'src/common/decorators';
 
 @Exclude()
 export class UserResponseDto {
   @Expose({ name: 'id' })
-  @Transform(({ obj }) => obj._id.toString())
+  @ObjectIdToString()
   readonly _id: ObjectId;
 
   @Expose()
@@ -14,7 +15,7 @@ export class UserResponseDto {
   readonly email: string;
 
   @Expose()
-  @Transform(({ obj }) => obj._id.toString())
+  @ObjectIdToString()
   readonly nativeLanguageId: ObjectId;
 
   constructor(partial: Partial<UserResponseDto>) {

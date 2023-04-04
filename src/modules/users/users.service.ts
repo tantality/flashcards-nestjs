@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { FilterQuery, ObjectId } from 'mongoose';
-import { LANGUAGE_EXCEPTION_MESSAGES, USER_EXCEPTION_MESSAGES } from 'src/common/constants';
+import { LANGUAGE_EXCEPTION_MESSAGE, USER_EXCEPTION_MESSAGE } from 'src/common/constants';
 import { LanguagesService } from '../languages/languages.service';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { User } from './user.schema';
@@ -13,12 +13,12 @@ export class UsersService {
   create = async (createUserDto: CreateUserDto): Promise<User> => {
     const nativeLanguage = await this.languagesServices.findOne({ _id: createUserDto.nativeLanguageId });
     if (!nativeLanguage) {
-      throw new NotFoundException(LANGUAGE_EXCEPTION_MESSAGES.NOT_FOUND);
+      throw new NotFoundException(LANGUAGE_EXCEPTION_MESSAGE.NOT_FOUND);
     }
 
     const user = await this.findOne({ normalizedEmail: createUserDto.normalizedEmail });
     if (user) {
-      throw new BadRequestException(USER_EXCEPTION_MESSAGES.ALREADY_EXISTS);
+      throw new BadRequestException(USER_EXCEPTION_MESSAGE.ALREADY_EXISTS);
     }
 
     const createdUser = await this.usersRepository.create(createUserDto);
@@ -29,7 +29,7 @@ export class UsersService {
   update = async (id: ObjectId, updateUserDto: UpdateUserDto): Promise<User> => {
     const nativeLanguage = await this.languagesServices.findOne({ _id: updateUserDto.nativeLanguageId });
     if (!nativeLanguage) {
-      throw new NotFoundException(LANGUAGE_EXCEPTION_MESSAGES.NOT_FOUND);
+      throw new NotFoundException(LANGUAGE_EXCEPTION_MESSAGE.NOT_FOUND);
     }
 
     const updatedUser = await this.usersRepository.update(id, updateUserDto);

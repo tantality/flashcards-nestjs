@@ -1,4 +1,4 @@
-export enum CONTROLLER_HANDLERS_ACTIONS {
+export enum CONTROLLER_HANDLER_ACTION {
   GET = 'to get',
   UPDATE = 'to update',
   DELETE = 'to delete',

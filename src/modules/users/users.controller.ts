@@ -1,7 +1,7 @@
 import { Controller, Get, Body, Patch, NotFoundException, UseInterceptors } from '@nestjs/common';
 import { ObjectId } from 'mongoose';
 import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { RESPONSE_STATUS_DESCRIPTIONS, USER_EXCEPTION_MESSAGES } from 'src/common/constants';
+import { RESPONSE_STATUS_DESCRIPTION, USER_EXCEPTION_MESSAGE } from 'src/common/constants';
 import { SerializerInterceptor } from 'src/common/interceptors';
 import { UsersService } from './users.service';
 import { UpdateUserDto, UserResponseDto } from './dto';
@@ -19,7 +19,7 @@ export class UsersController {
   async getUser(): Promise<UserResponseDto> {
     const user = await this.usersService.findOne({ id: this.MOCK_USER_ID });
     if (!user) {
-      throw new NotFoundException(USER_EXCEPTION_MESSAGES.NOT_FOUND);
+      throw new NotFoundException(USER_EXCEPTION_MESSAGE.NOT_FOUND);
     }
 
     return user;
@@ -27,8 +27,8 @@ export class UsersController {
 
   @Patch('me')
   @ApiOperation({ summary: 'Update an existing user' })
-  @ApiBadRequestResponse({ description: RESPONSE_STATUS_DESCRIPTIONS.BAD_REQUEST })
-  @ApiNotFoundResponse({ description: RESPONSE_STATUS_DESCRIPTIONS.NOT_FOUND })
+  @ApiBadRequestResponse({ description: RESPONSE_STATUS_DESCRIPTION.BAD_REQUEST })
+  @ApiNotFoundResponse({ description: RESPONSE_STATUS_DESCRIPTION.NOT_FOUND })
   @UseInterceptors(new SerializerInterceptor(UserResponseDto))
   async updateUser(@Body() updateUserDto: UpdateUserDto): Promise<UserResponseDto> {
     const updatedLanguage = await this.usersService.update(this.MOCK_USER_ID, updateUserDto);

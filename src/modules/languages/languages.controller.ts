@@ -2,11 +2,11 @@ import { Controller, HttpStatus, NotFoundException } from '@nestjs/common';
 import { Body, Delete, Get, HttpCode, Param, Patch, Post, Query, UseInterceptors } from '@nestjs/common/decorators';
 import { ApiBadRequestResponse, ApiNoContentResponse, ApiNotFoundResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
-import { CONTROLLER_HANDLERS_ACTIONS, LANGUAGE_EXCEPTION_MESSAGES, RESPONSE_STATUS_DESCRIPTIONS } from 'src/common/constants';
+import { CONTROLLER_HANDLER_ACTION, LANGUAGE_EXCEPTION_MESSAGE, RESPONSE_STATUS_DESCRIPTION } from 'src/common/constants';
 import { SerializerInterceptor } from 'src/common/interceptors';
 import { ParseObjectIdPipe } from 'src/common/pipes';
 import { AllLanguagesResponseDto, CreateLanguageDto, GetAllLanguagesQueryDto, LanguageResponseDto, UpdateLanguageDto } from './dto';
-import { LANGUAGE_DTO_PROPERTY_DESCRIPTIONS } from './languages.constants';
+import { LANGUAGE_DTO_PROPERTY_DESCRIPTION } from './languages.constants';
 import { LanguagesService } from './languages.service';
 
 @ApiTags('languages')
@@ -16,7 +16,7 @@ export class LanguagesController {
 
   @Get()
   @ApiOperation({ summary: 'Get a list of languages' })
-  @ApiBadRequestResponse({ description: RESPONSE_STATUS_DESCRIPTIONS.BAD_REQUEST })
+  @ApiBadRequestResponse({ description: RESPONSE_STATUS_DESCRIPTION.BAD_REQUEST })
   @UseInterceptors(new SerializerInterceptor(AllLanguagesResponseDto))
   async getAllLanguages(@Query() query: GetAllLanguagesQueryDto): Promise<AllLanguagesResponseDto> {
     const languagesAndTheirCount = await this.languagesService.findAndCountAll(query);
@@ -25,14 +25,14 @@ export class LanguagesController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a language' })
-  @ApiBadRequestResponse({ description: RESPONSE_STATUS_DESCRIPTIONS.BAD_REQUEST })
-  @ApiNotFoundResponse({ description: RESPONSE_STATUS_DESCRIPTIONS.NOT_FOUND })
-  @ApiParam({ name: 'id', type: String, description: LANGUAGE_DTO_PROPERTY_DESCRIPTIONS.ID + CONTROLLER_HANDLERS_ACTIONS.GET })
+  @ApiBadRequestResponse({ description: RESPONSE_STATUS_DESCRIPTION.BAD_REQUEST })
+  @ApiNotFoundResponse({ description: RESPONSE_STATUS_DESCRIPTION.NOT_FOUND })
+  @ApiParam({ name: 'id', type: String, description: LANGUAGE_DTO_PROPERTY_DESCRIPTION.ID + CONTROLLER_HANDLER_ACTION.GET })
   @UseInterceptors(new SerializerInterceptor(LanguageResponseDto))
   async getLanguage(@Param('id', ParseObjectIdPipe) id: ObjectId): Promise<LanguageResponseDto> {
     const language = await this.languagesService.findOne({ _id: id });
     if (!language) {
-      throw new NotFoundException(LANGUAGE_EXCEPTION_MESSAGES.NOT_FOUND);
+      throw new NotFoundException(LANGUAGE_EXCEPTION_MESSAGE.NOT_FOUND);
     }
 
     return language;
@@ -40,7 +40,7 @@ export class LanguagesController {
 
   @Post()
   @ApiOperation({ summary: 'Create a language' })
-  @ApiBadRequestResponse({ description: RESPONSE_STATUS_DESCRIPTIONS.BAD_REQUEST })
+  @ApiBadRequestResponse({ description: RESPONSE_STATUS_DESCRIPTION.BAD_REQUEST })
   @UseInterceptors(new SerializerInterceptor(LanguageResponseDto))
   async createLanguage(@Body() createLanguageDto: CreateLanguageDto): Promise<LanguageResponseDto> {
     const createdLanguage = await this.languagesService.create(createLanguageDto);
@@ -49,9 +49,9 @@ export class LanguagesController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update an existing language' })
-  @ApiBadRequestResponse({ description: RESPONSE_STATUS_DESCRIPTIONS.BAD_REQUEST })
-  @ApiNotFoundResponse({ description: RESPONSE_STATUS_DESCRIPTIONS.NOT_FOUND })
-  @ApiParam({ name: 'id', type: String, description: LANGUAGE_DTO_PROPERTY_DESCRIPTIONS.ID + CONTROLLER_HANDLERS_ACTIONS.UPDATE })
+  @ApiBadRequestResponse({ description: RESPONSE_STATUS_DESCRIPTION.BAD_REQUEST })
+  @ApiNotFoundResponse({ description: RESPONSE_STATUS_DESCRIPTION.NOT_FOUND })
+  @ApiParam({ name: 'id', type: String, description: LANGUAGE_DTO_PROPERTY_DESCRIPTION.ID + CONTROLLER_HANDLER_ACTION.UPDATE })
   @UseInterceptors(new SerializerInterceptor(LanguageResponseDto))
   async updateLanguage(
     @Param('id', ParseObjectIdPipe) id: ObjectId,
@@ -64,10 +64,10 @@ export class LanguagesController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete a language' })
-  @ApiNoContentResponse({ description: RESPONSE_STATUS_DESCRIPTIONS.NO_CONTENT })
-  @ApiBadRequestResponse({ description: RESPONSE_STATUS_DESCRIPTIONS.BAD_REQUEST })
-  @ApiNotFoundResponse({ description: RESPONSE_STATUS_DESCRIPTIONS.NOT_FOUND })
-  @ApiParam({ name: 'id', type: String, description: LANGUAGE_DTO_PROPERTY_DESCRIPTIONS.ID + CONTROLLER_HANDLERS_ACTIONS.DELETE })
+  @ApiNoContentResponse({ description: RESPONSE_STATUS_DESCRIPTION.NO_CONTENT })
+  @ApiBadRequestResponse({ description: RESPONSE_STATUS_DESCRIPTION.BAD_REQUEST })
+  @ApiNotFoundResponse({ description: RESPONSE_STATUS_DESCRIPTION.NOT_FOUND })
+  @ApiParam({ name: 'id', type: String, description: LANGUAGE_DTO_PROPERTY_DESCRIPTION.ID + CONTROLLER_HANDLER_ACTION.DELETE })
   async deleteLanguage(@Param('id', ParseObjectIdPipe) id: ObjectId): Promise<void> {
     await this.languagesService.delete(id);
   }

@@ -9,6 +9,6 @@ import { LanguagesService } from './languages.service';
   imports: [MongooseModule.forFeature([{ name: Language.name, schema: LanguageSchema }])],
   controllers: [LanguagesController],
   providers: [LanguagesService, LanguagesRepository],
-  exports: [LanguagesService, MongooseModule],
+  exports: [LanguagesService],
 })
 export class LanguagesModule {}

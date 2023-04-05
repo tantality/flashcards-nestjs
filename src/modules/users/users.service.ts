@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { FilterQuery, ObjectId } from 'mongoose';
 import { LANGUAGE_EXCEPTION_MESSAGE, USER_EXCEPTION_MESSAGE } from 'src/common/constants';
 import { LanguagesService } from '../languages/languages.service';
@@ -8,10 +8,13 @@ import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
-  constructor(private usersRepository: UsersRepository, private languagesServices: LanguagesService) {}
+  constructor(
+    private usersRepository: UsersRepository,
+    @Inject(forwardRef(() => LanguagesService)) private languagesService: LanguagesService,
+  ) {}
 
   create = async (createUserDto: CreateUserDto): Promise<User> => {
-    const nativeLanguage = await this.languagesServices.findOne({ _id: createUserDto.nativeLanguageId });
+    const nativeLanguage = await this.languagesService.findOne({ _id: createUserDto.nativeLanguageId });
     if (!nativeLanguage) {
       throw new NotFoundException(LANGUAGE_EXCEPTION_MESSAGE.NOT_FOUND);
     }
@@ -27,7 +30,7 @@ export class UsersService {
   };
 
   update = async (id: ObjectId, updateUserDto: UpdateUserDto): Promise<User> => {
-    const nativeLanguage = await this.languagesServices.findOne({ _id: updateUserDto.nativeLanguageId });
+    const nativeLanguage = await this.languagesService.findOne({ _id: updateUserDto.nativeLanguageId });
     if (!nativeLanguage) {
       throw new NotFoundException(LANGUAGE_EXCEPTION_MESSAGE.NOT_FOUND);
     }

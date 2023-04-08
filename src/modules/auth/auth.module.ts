@@ -3,6 +3,7 @@ import { JwtModule } from '@nestjs/jwt/dist';
 import { MongooseModule } from '@nestjs/mongoose';
 import { EnvConfigModule } from 'src/config/env-config/env-config.module';
 import { User, UserSchema } from '../users/user.schema';
+import { UsersModule } from '../users/users.module';
 import { AuthController } from './auth.controller';
 import { RefreshTokenRepository } from './repositories/refresh-token.repository';
 import { AuthService } from './services/auth.service';
@@ -12,6 +13,7 @@ import { JWTService } from './services/jwt.service';
   imports: [
     EnvConfigModule,
     JwtModule.register({}),
+    UsersModule,
     MongooseModule.forFeature([
       {
         name: User.name,

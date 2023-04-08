@@ -2,7 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { ObjectId } from 'mongoose';
 import { USER_ROLE } from 'src/modules/users/users.constants';
-import { SignUpDto, LogInDto } from '../dto';
+import { SignUpDto, LogInDto, AuthResponseDto } from '../dto';
 import { JWTService } from './jwt.service';
 
 @Injectable()
@@ -11,13 +11,21 @@ export class AuthService {
 
   constructor(private jwtService: JWTService) {}
 
-  signUp(signUpDto: SignUpDto) {
+  signUp(signUpDto: SignUpDto): AuthResponseDto {
     const tokens = this.jwtService.generateTokens(this.TOKENS_PAYLOAD);
-    return 'sign up';
+
+    return {
+      userId: this.TOKENS_PAYLOAD.userId,
+      ...tokens,
+    };
   }
 
-  logIn(logInDto: LogInDto) {
+  logIn(logInDto: LogInDto): AuthResponseDto {
     const tokens = this.jwtService.generateTokens(this.TOKENS_PAYLOAD);
-    return 'log in';
+
+    return {
+      userId: this.TOKENS_PAYLOAD.userId,
+      ...tokens,
+    };
   }
 }

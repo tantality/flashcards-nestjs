@@ -1,10 +1,8 @@
-/* eslint-disable require-await */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { ObjectId } from 'mongoose';
 import normalizeEmail from 'normalize-email';
 import * as bcrypt from 'bcrypt';
-import { USER_EXCEPTION_MESSAGE } from 'src/common/constants';
+import { AUTH_EXCEPTION_MESSAGE, USER_EXCEPTION_MESSAGE } from 'src/common/constants';
 import { USER_ROLE } from 'src/modules/users/users.constants';
 import { UsersService } from 'src/modules/users/users.service';
 import { SALT_ROUNDS } from '../auth.constants';
@@ -38,12 +36,25 @@ export class AuthService {
     return { userId, ...tokens };
   };
 
-  logIn = async (logInDto: LogInDto): Promise<AuthResponseDto> => {
-    const tokens = this.jwtService.generateTokens(this.TOKENS_PAYLOAD);
+  logIn = async ({ email, password }: LogInDto): Promise<AuthResponseDto> => {
+    const normalizedEmail = normalizeEmail(email);
+    const user = await this.usersService.findOne({ normalizedEmail });
+    if (!user) {
+      throw new NotFoundException(USER_EXCEPTION_MESSAGE.NOT_FOUND);
+    }
 
-    return {
-      userId: this.TOKENS_PAYLOAD.userId,
-      ...tokens,
-    };
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect) {
+      throw new UnauthorizedException(AUTH_EXCEPTION_MESSAGE.INVALID_PASSWORD);
+    }
+
+    const userId = user._id;
+
+    const payload = { userId, role: user.role };
+    const tokens = this.jwtService.generateTokens(payload);
+
+    await this.jwtService.saveRefreshToken(userId, tokens.refreshToken);
+
+    return { userId, ...tokens };
   };
 }

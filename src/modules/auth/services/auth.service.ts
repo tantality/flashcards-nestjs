@@ -1,3 +1,4 @@
+/* eslint-disable require-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
 import { ObjectId } from 'mongoose';
@@ -11,21 +12,23 @@ export class AuthService {
 
   constructor(private jwtService: JWTService) {}
 
-  signUp(signUpDto: SignUpDto): AuthResponseDto {
+  signUp = async (signUpDto: SignUpDto): Promise<AuthResponseDto> => {
+    const tokens = this.jwtService.generateTokens(this.TOKENS_PAYLOAD);
+
+    await this.jwtService.saveRefreshToken(this.TOKENS_PAYLOAD.userId, tokens.refreshToken);
+
+    return {
+      userId: this.TOKENS_PAYLOAD.userId,
+      ...tokens,
+    };
+  };
+
+  logIn = async (logInDto: LogInDto): Promise<AuthResponseDto> => {
     const tokens = this.jwtService.generateTokens(this.TOKENS_PAYLOAD);
 
     return {
       userId: this.TOKENS_PAYLOAD.userId,
       ...tokens,
     };
-  }
-
-  logIn(logInDto: LogInDto): AuthResponseDto {
-    const tokens = this.jwtService.generateTokens(this.TOKENS_PAYLOAD);
-
-    return {
-      userId: this.TOKENS_PAYLOAD.userId,
-      ...tokens,
-    };
-  }
+  };
 }

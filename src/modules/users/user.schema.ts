@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, ObjectId, SchemaTypes } from 'mongoose';
 import { CommonSchemaProperties } from 'src/common/classes';
 import { SCHEMA_OPTIONS } from 'src/common/constants';
+import { RefreshToken, RefreshTokenSchema } from '../auth/schemas/refresh-token.schema';
 import { USER_ROLE } from './users.constants';
 
 export type UserDocument = HydratedDocument<User>;
@@ -25,6 +26,9 @@ export class User extends CommonSchemaProperties {
 
   @Prop({ enum: Object.values(USER_ROLE), default: USER_ROLE.USER })
     role: USER_ROLE;
+
+  @Prop({ type: [RefreshTokenSchema] })
+    refreshTokens: RefreshToken[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

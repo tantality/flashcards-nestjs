@@ -27,4 +27,8 @@ export class JWTService {
   saveRefreshToken = async (userId: ObjectId, token: string): Promise<void> => {
     await this.refreshTokenRepository.save(userId, token);
   };
+
+  deleteRefreshToken = async (userId: ObjectId, token: string): Promise<void> => {
+    await this.refreshTokenRepository.delete(userId, token);
+  };
 }

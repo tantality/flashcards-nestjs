@@ -10,4 +10,8 @@ export class RefreshTokenRepository {
   save = async (userId: ObjectId, token: string): Promise<void> => {
     await this.userModel.updateOne({ _id: userId }, { $push: { refreshTokens: { value: token } } });
   };
+
+  delete = async (userId: ObjectId, token: string): Promise<void> => {
+    await this.userModel.updateOne({ _id: userId }, { $pull: { refreshTokens: { value: token } } });
+  };
 }

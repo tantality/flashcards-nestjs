@@ -4,7 +4,7 @@ import { ObjectId } from 'mongoose';
 import { EnvConfigService } from 'src/config/env-config/env-config.service';
 import { ACCESS_TOKEN_LIFETIME_IN_MS, REFRESH_TOKEN_LIFETIME_IN_MS } from '../auth.constants';
 import { RefreshTokenRepository } from '../repositories/refresh-token.repository';
-import { JwtPayload, JwtTokens } from '../types';
+import { JwtTokens, UserJwtPayload } from '../types';
 
 @Injectable()
 export class JWTService {
@@ -14,7 +14,7 @@ export class JWTService {
     private envConfigService: EnvConfigService,
   ) {}
 
-  generateTokens = (payload: JwtPayload): JwtTokens => {
+  generateTokens = (payload: UserJwtPayload): JwtTokens => {
     const atSecret = this.envConfigService.getJwtAccessTokenSecret();
     const accessToken = this.jwtService.sign(payload, { secret: atSecret, expiresIn: `${ACCESS_TOKEN_LIFETIME_IN_MS}ms` });
 

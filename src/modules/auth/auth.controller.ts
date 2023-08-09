@@ -1,9 +1,11 @@
-import { Controller, Post, Body, Res } from '@nestjs/common';
+import { Controller, Post, Body, Res, Get } from '@nestjs/common';
 import { Response } from 'express';
+import { User, RefreshToken } from 'src/common/decorators';
 import { AuthService } from './services/auth.service';
 import { AuthResponseDto, LogInDto, SignUpDto } from './dto';
 import { COOKIE_OPTIONS } from './auth.constants';
 import { SkipAccessTokenCheck } from './decorators';
+import { DecodedUserJwtPayload } from './types';
 
 @Controller('auth')
 export class AuthController {
@@ -25,5 +27,17 @@ export class AuthController {
     res.cookie('refreshToken', authDto.refreshToken, COOKIE_OPTIONS);
 
     return authDto;
+  }
+
+  @Get('log-out')
+  async logOut(
+    @User() payload: DecodedUserJwtPayload,
+      @RefreshToken() token: any,
+      @Res({ passthrough: true }) res: Response,
+  ): Promise<void> {
+    await this.authService.logOut(payload.userId, token);
+    res.clearCookie('refreshToken');
+
+    return;
   }
 }

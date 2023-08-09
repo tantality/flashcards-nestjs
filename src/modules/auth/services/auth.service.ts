@@ -57,4 +57,8 @@ export class AuthService {
 
     return { userId, ...tokens };
   };
+
+  logOut = async (userId: ObjectId, refreshToken: string): Promise<void> => {
+    await this.jwtService.deleteRefreshToken(userId, refreshToken);
+  };
 }

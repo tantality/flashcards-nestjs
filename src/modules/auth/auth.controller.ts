@@ -1,11 +1,13 @@
-import { Controller, Post, Body, Res, Get } from '@nestjs/common';
+import { Controller, Post, Body, Res, Get, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
+import { ObjectId } from 'mongoose';
 import { User, RefreshToken } from 'src/common/decorators';
 import { AuthService } from './services/auth.service';
 import { AuthResponseDto, LogInDto, SignUpDto } from './dto';
 import { COOKIE_OPTIONS } from './auth.constants';
 import { SkipAccessTokenCheck } from './decorators';
 import { DecodedUserJwtPayload } from './types';
+import { RefreshTokenAuthGuard } from './guards';
 
 @Controller('auth')
 export class AuthController {
@@ -39,5 +41,19 @@ export class AuthController {
     res.clearCookie('refreshToken');
 
     return;
+  }
+
+  @Post('refresh-tokens')
+  @UseGuards(RefreshTokenAuthGuard)
+  @SkipAccessTokenCheck()
+  async refreshTokens(
+    @User() payload: DecodedUserJwtPayload & { refreshTokenId: ObjectId },
+      @Res({ passthrough: true }) res: Response,
+  ): Promise<AuthResponseDto> {
+    const { refreshTokenId: tokenId, userId, role } = payload;
+    const authData = await this.authService.refreshTokens(tokenId, { userId, role });
+    res.cookie('refreshToken', authData.refreshToken, COOKIE_OPTIONS);
+
+    return authData;
   }
 }

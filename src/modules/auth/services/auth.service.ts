@@ -7,6 +7,7 @@ import { USER_ROLE } from 'src/modules/users/users.constants';
 import { UsersService } from 'src/modules/users/users.service';
 import { SALT_ROUNDS } from '../auth.constants';
 import { SignUpDto, LogInDto, AuthResponseDto } from '../dto';
+import { UserJwtPayload } from '../types';
 import { JWTService } from './jwt.service';
 
 @Injectable()
@@ -60,5 +61,12 @@ export class AuthService {
 
   logOut = async (userId: ObjectId, refreshToken: string): Promise<void> => {
     await this.jwtService.deleteRefreshToken(userId, refreshToken);
+  };
+
+  refreshTokens = async (refreshTokenId: ObjectId, payload: UserJwtPayload): Promise<AuthResponseDto> => {
+    const tokens = this.jwtService.generateTokens(payload);
+    await this.jwtService.updateRefreshToken(refreshTokenId, tokens.refreshToken);
+
+    return { userId: payload.userId, ...tokens };
   };
 }

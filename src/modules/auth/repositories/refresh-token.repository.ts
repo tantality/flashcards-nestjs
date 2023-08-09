@@ -37,14 +37,13 @@ export class RefreshTokenRepository {
 
   update = async (_id: ObjectId, refreshTokenValue: string): Promise<void> => {
     await this.userModel.updateOne(
-      { refreshTokens: { $exists: true } },
+      { refreshTokens: { $elemMatch: { _id: { $eq: _id } } } },
       {
         $set: {
-          'refreshTokens.$[token].value': refreshTokenValue,
-          'refreshTokens.$[token].expiresAt': Date.now() + REFRESH_TOKEN_LIFETIME_IN_MS,
+          'refreshTokens.$.value': refreshTokenValue,
+          'refreshTokens.$.expiresAt': Date.now() + REFRESH_TOKEN_LIFETIME_IN_MS,
         },
       },
-      { arrayFilters: [{ 'token._id': _id }] },
     );
   };
 

@@ -12,10 +12,11 @@ export class AccessTokenAuthGuard extends AuthGuard(STRATEGY_NAME.ACCESS_TOKEN_S
   }
 
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
-    const isRouteFreeFromAccessTokenCheck = this.reflector.getAllAndOverride<boolean>(
-      IS_ROUTE_FREE_FROM_ACCESS_TOKEN_CHECK_KEY,
-      [context.getHandler(), context.getClass()],
-    );
+    const isRouteFreeFromAccessTokenCheck = this.reflector.getAllAndOverride<boolean>(IS_ROUTE_FREE_FROM_ACCESS_TOKEN_CHECK_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+
     if (isRouteFreeFromAccessTokenCheck) {
       return true;
     }

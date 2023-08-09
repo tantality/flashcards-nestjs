@@ -7,6 +7,12 @@ import { LanguagesModule } from '../languages/languages.module';
 import { UsersModule } from '../users/users.module';
 
 @Module({
-  imports: [EnvConfigModule, MongooseModule.forRoot(process.env.MONGODB_CONNECTION_URI as string), LanguagesModule, UsersModule, AuthModule],
+  imports: [
+    EnvConfigModule,
+    MongooseModule.forRoot(process.env.MONGODB_CONNECTION_URI as string),
+    LanguagesModule,
+    UsersModule,
+    AuthModule,
+  ],
 })
 export class AppModule {}

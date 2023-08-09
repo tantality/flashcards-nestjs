@@ -10,7 +10,7 @@ import { AccessTokenAuthGuard } from './guards';
 import { RefreshTokenRepository } from './repositories/refresh-token.repository';
 import { AuthService } from './services/auth.service';
 import { JWTService } from './services/jwt.service';
-import { AccessTokenStrategy } from './strategies';
+import { AccessTokenStrategy, RefreshTokenStrategy } from './strategies';
 
 @Module({
   imports: [
@@ -34,6 +34,7 @@ import { AccessTokenStrategy } from './strategies';
       provide: APP_GUARD,
       useClass: AccessTokenAuthGuard,
     },
+    RefreshTokenStrategy,
   ],
 })
 export class AuthModule {}

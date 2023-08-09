@@ -4,7 +4,7 @@ import { ObjectId } from 'mongoose';
 import { EnvConfigService } from 'src/config/env-config/env-config.service';
 import { ACCESS_TOKEN_LIFETIME_IN_MS, REFRESH_TOKEN_LIFETIME_IN_MS } from '../auth.constants';
 import { RefreshTokenRepository } from '../repositories/refresh-token.repository';
-import { JwtTokens, UserJwtPayload } from '../types';
+import { JwtTokens, RefreshToken, UserJwtPayload } from '../types';
 
 @Injectable()
 export class JWTService {
@@ -22,6 +22,11 @@ export class JWTService {
     const refreshToken = this.jwtService.sign(payload, { secret: rtSecret, expiresIn: `${REFRESH_TOKEN_LIFETIME_IN_MS}ms` });
 
     return { accessToken, refreshToken };
+  };
+
+  findRefreshToken = async (token: string): Promise<RefreshToken | null> => {
+    const refreshToken = await this.refreshTokenRepository.findOne(token);
+    return refreshToken;
   };
 
   saveRefreshToken = async (userId: ObjectId, token: string): Promise<void> => {

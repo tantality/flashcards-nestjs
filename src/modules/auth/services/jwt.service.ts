@@ -33,6 +33,10 @@ export class JWTService {
     await this.refreshTokenRepository.save(userId, token);
   };
 
+  updateRefreshToken = async (id: ObjectId, token: string): Promise<void> => {
+    await this.refreshTokenRepository.update(id, token);
+  };
+
   deleteRefreshToken = async (userId: ObjectId, token: string): Promise<void> => {
     await this.refreshTokenRepository.delete(userId, token);
   };

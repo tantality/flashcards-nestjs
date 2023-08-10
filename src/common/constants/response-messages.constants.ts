@@ -34,4 +34,5 @@ export enum RESPONSE_STATUS_DESCRIPTION {
   BAD_REQUEST = 'Bad request',
   NO_CONTENT = 'Ok, no content to return',
   NOT_FOUND = 'Resource not found',
+  UNAUTHORIZED = 'Unauthorized',
 }

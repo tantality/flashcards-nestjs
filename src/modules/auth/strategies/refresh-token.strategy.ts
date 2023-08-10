@@ -5,7 +5,7 @@ import { ObjectId } from 'mongoose';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { AUTH_EXCEPTION_MESSAGE } from 'src/common/constants';
 import { EnvConfigService } from 'src/config/env-config/env-config.service';
-import { STRATEGY_NAME } from '../auth.constants';
+import { COOKIE_NAME, STRATEGY_NAME } from '../auth.constants';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { JWTService } from '../services/jwt.service';
 import { DecodedUserJwtPayload } from '../types';
@@ -22,7 +22,7 @@ export class RefreshTokenStrategy extends PassportStrategy(Strategy, STRATEGY_NA
   }
 
   async validate(@Req() req: Request): Promise<DecodedUserJwtPayload & { refreshTokenId: ObjectId }> {
-    const token = req.cookies['refreshToken'] as string;
+    const token = req.cookies[COOKIE_NAME.REFRESH_TOKEN] as string;
     const payload = this.JWTService.verifyRefreshToken(token);
 
     const refreshToken = await this.JWTService.findRefreshToken(token);
@@ -35,7 +35,7 @@ export class RefreshTokenStrategy extends PassportStrategy(Strategy, STRATEGY_NA
 }
 
 const extractRefreshTokenFromCookie = (req: Request): string => {
-  const refreshToken = req.cookies['refreshToken'];
+  const refreshToken = req.cookies[COOKIE_NAME.REFRESH_TOKEN];
   if (!refreshToken) {
     throw new UnauthorizedException(AUTH_EXCEPTION_MESSAGE.REFRESH_TOKEN_IS_MISSING);
   }

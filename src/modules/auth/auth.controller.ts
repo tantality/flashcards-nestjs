@@ -4,7 +4,7 @@ import { ObjectId } from 'mongoose';
 import { User, RefreshToken } from 'src/common/decorators';
 import { AuthService } from './services/auth.service';
 import { AuthResponseDto, LogInDto, SignUpDto } from './dto';
-import { REFRESH_TOKEN_LIFETIME_IN_MS } from './auth.constants';
+import { COOKIE_NAME, REFRESH_TOKEN_LIFETIME_IN_MS } from './auth.constants';
 import { SkipAccessTokenCheck } from './decorators';
 import { DecodedUserJwtPayload } from './types';
 import { RefreshTokenAuthGuard } from './guards';
@@ -19,7 +19,7 @@ export class AuthController {
   @SkipAccessTokenCheck()
   async signUp(@Body() signUpDto: SignUpDto, @Res({ passthrough: true }) res: Response): Promise<AuthResponseDto> {
     const authDto = await this.authService.signUp(signUpDto);
-    res.cookie('refreshToken', authDto.refreshToken, this.COOKIE_OPTIONS);
+    res.cookie(COOKIE_NAME.REFRESH_TOKEN, authDto.refreshToken, this.COOKIE_OPTIONS);
 
     return authDto;
   }
@@ -28,7 +28,7 @@ export class AuthController {
   @SkipAccessTokenCheck()
   async logIn(@Body() logInDto: LogInDto, @Res({ passthrough: true }) res: Response): Promise<AuthResponseDto> {
     const authDto = await this.authService.logIn(logInDto);
-    res.cookie('refreshToken', authDto.refreshToken, this.COOKIE_OPTIONS);
+    res.cookie(COOKIE_NAME.REFRESH_TOKEN, authDto.refreshToken, this.COOKIE_OPTIONS);
 
     return authDto;
   }
@@ -40,7 +40,7 @@ export class AuthController {
       @Res({ passthrough: true }) res: Response,
   ): Promise<void> {
     await this.authService.logOut(payload.userId, token);
-    res.clearCookie('refreshToken');
+    res.clearCookie(COOKIE_NAME.REFRESH_TOKEN);
 
     return;
   }
@@ -54,7 +54,7 @@ export class AuthController {
   ): Promise<AuthResponseDto> {
     const { refreshTokenId: tokenId, userId, role } = payload;
     const authData = await this.authService.refreshTokens(tokenId, { userId, role });
-    res.cookie('refreshToken', authData.refreshToken, this.COOKIE_OPTIONS);
+    res.cookie(COOKIE_NAME.REFRESH_TOKEN, authData.refreshToken, this.COOKIE_OPTIONS);
 
     return authData;
   }

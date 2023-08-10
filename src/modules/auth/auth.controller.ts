@@ -1,7 +1,9 @@
 import { Controller, Post, Body, Res, Get, UseGuards } from '@nestjs/common';
 import { CookieOptions, Response } from 'express';
 import { ObjectId } from 'mongoose';
+import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { User, RefreshToken } from 'src/common/decorators';
+import { RESPONSE_STATUS_DESCRIPTION } from 'src/common/constants';
 import { AuthService } from './services/auth.service';
 import { AuthResponseDto, LogInDto, SignUpDto } from './dto';
 import { COOKIE_NAME, REFRESH_TOKEN_LIFETIME_IN_MS } from './auth.constants';
@@ -9,6 +11,7 @@ import { SkipAccessTokenCheck } from './decorators';
 import { DecodedUserJwtPayload } from './types';
 import { RefreshTokenAuthGuard } from './guards';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   COOKIE_OPTIONS: CookieOptions = { maxAge: REFRESH_TOKEN_LIFETIME_IN_MS, httpOnly: true, sameSite: 'strict' };
@@ -16,6 +19,9 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('sign-up')
+  @ApiOperation({ summary: 'Sign up' })
+  @ApiBadRequestResponse({ description: RESPONSE_STATUS_DESCRIPTION.BAD_REQUEST })
+  @ApiNotFoundResponse({ description: RESPONSE_STATUS_DESCRIPTION.NOT_FOUND })
   @SkipAccessTokenCheck()
   async signUp(@Body() signUpDto: SignUpDto, @Res({ passthrough: true }) res: Response): Promise<AuthResponseDto> {
     const authDto = await this.authService.signUp(signUpDto);
@@ -25,6 +31,10 @@ export class AuthController {
   }
 
   @Post('log-in')
+  @ApiOperation({ summary: 'Log in' })
+  @ApiBadRequestResponse({ description: RESPONSE_STATUS_DESCRIPTION.BAD_REQUEST })
+  @ApiNotFoundResponse({ description: RESPONSE_STATUS_DESCRIPTION.NOT_FOUND })
+  @ApiUnauthorizedResponse({ description: RESPONSE_STATUS_DESCRIPTION.UNAUTHORIZED })
   @SkipAccessTokenCheck()
   async logIn(@Body() logInDto: LogInDto, @Res({ passthrough: true }) res: Response): Promise<AuthResponseDto> {
     const authDto = await this.authService.logIn(logInDto);

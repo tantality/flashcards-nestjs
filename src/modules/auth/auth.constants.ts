@@ -1,5 +1,3 @@
-import { CookieOptions } from 'express';
-
 export const MIN_NAME_LENGTH = 5;
 export const MAX_NAME_LENGTH = 256;
 
@@ -11,4 +9,7 @@ export const REFRESH_TOKEN_LIFETIME_IN_MS = REFRESH_TOKEN_LIFETIME_IN_SEC * 1000
 
 export const SALT_ROUNDS = 10;
 
-export const COOKIE_OPTIONS: CookieOptions = { maxAge: REFRESH_TOKEN_LIFETIME_IN_MS, httpOnly: true, sameSite: 'strict' };
+export enum STRATEGY_NAME {
+  ACCESS_TOKEN_STRATEGY = 'accessTokenStrategy',
+  REFRESH_TOKEN_STRATEGY = 'refreshTokenStrategy',
+}

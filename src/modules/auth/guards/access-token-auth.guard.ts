@@ -2,7 +2,7 @@ import { ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
-import { STRATEGY_NAME } from '../constants';
+import { STRATEGY_NAME } from '../auth.constants';
 import { IS_ROUTE_FREE_FROM_ACCESS_TOKEN_CHECK_KEY } from '../decorators';
 
 @Injectable()

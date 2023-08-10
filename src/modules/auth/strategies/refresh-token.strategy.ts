@@ -5,7 +5,7 @@ import { ObjectId } from 'mongoose';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { AUTH_EXCEPTION_MESSAGE } from 'src/common/constants';
 import { EnvConfigService } from 'src/config/env-config/env-config.service';
-import { STRATEGY_NAME } from '../constants/common.constants';
+import { STRATEGY_NAME } from '../auth.constants';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { JWTService } from '../services/jwt.service';
 import { DecodedUserJwtPayload } from '../types';

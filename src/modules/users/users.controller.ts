@@ -26,6 +26,7 @@ export class UsersController {
   @Patch('me')
   @ApiOperation({ summary: 'Update an existing user' })
   @ApiBadRequestResponse({ description: RESPONSE_STATUS_DESCRIPTION.BAD_REQUEST })
+  @ApiUnauthorizedResponse({ description: RESPONSE_STATUS_DESCRIPTION.UNAUTHORIZED })
   @ApiNotFoundResponse({ description: RESPONSE_STATUS_DESCRIPTION.NOT_FOUND })
   @UseInterceptors(new SerializerInterceptor(UserResponseDto))
   async updateUser(@CurrentUser() payload: DecodedUserJwtPayload, @Body() updateUserDto: UpdateUserDto): Promise<UserResponseDto> {

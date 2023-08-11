@@ -1,11 +1,12 @@
-import { Controller, Get, Body, Patch, NotFoundException, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Body, Patch, UseInterceptors } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiNotFoundResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { RESPONSE_STATUS_DESCRIPTION, USER_EXCEPTION_MESSAGE } from 'src/common/constants';
+import { RESPONSE_STATUS_DESCRIPTION } from 'src/common/constants';
 import { SerializerInterceptor } from 'src/common/interceptors';
 import { CurrentUser } from 'src/common/decorators';
 import { DecodedUserJwtPayload } from '../auth/types';
 import { UsersService } from './users.service';
 import { UpdateUserDto, UserResponseDto } from './dto';
+import { User } from './user.schema';
 
 @ApiTags('users')
 @ApiBearerAuth()
@@ -18,11 +19,7 @@ export class UsersController {
   @ApiUnauthorizedResponse({ description: RESPONSE_STATUS_DESCRIPTION.UNAUTHORIZED })
   @UseInterceptors(new SerializerInterceptor(UserResponseDto))
   async getUser(@CurrentUser() payload: DecodedUserJwtPayload): Promise<UserResponseDto> {
-    const user = (await this.usersService.findOne({ _id: payload.userId }));
-    if (!user) {
-      throw new NotFoundException(USER_EXCEPTION_MESSAGE.NOT_FOUND);
-    }
-
+    const user = (await this.usersService.findOne({ _id: payload.userId })) as User;
     return user;
   }
 

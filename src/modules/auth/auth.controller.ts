@@ -1,7 +1,7 @@
 import { Controller, Post, Body, Res, Get, UseGuards } from '@nestjs/common';
 import { CookieOptions, Response } from 'express';
 import { ObjectId } from 'mongoose';
-import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiNotFoundResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { User, RefreshToken } from 'src/common/decorators';
 import { RESPONSE_STATUS_DESCRIPTION } from 'src/common/constants';
 import { AuthService } from './services/auth.service';
@@ -44,6 +44,7 @@ export class AuthController {
   }
 
   @Get('log-out')
+  @ApiBearerAuth()
   async logOut(
     @User() payload: DecodedUserJwtPayload,
       @RefreshToken() token: any,

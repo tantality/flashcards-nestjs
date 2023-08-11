@@ -1,6 +1,6 @@
 import { Controller, HttpStatus, NotFoundException } from '@nestjs/common';
 import { Body, Delete, Get, HttpCode, Param, Patch, Post, Query, UseInterceptors } from '@nestjs/common/decorators';
-import { ApiBadRequestResponse, ApiNoContentResponse, ApiNotFoundResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiNoContentResponse, ApiNotFoundResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
 import { CONTROLLER_HANDLER_ACTION, LANGUAGE_EXCEPTION_MESSAGE, RESPONSE_STATUS_DESCRIPTION } from 'src/common/constants';
 import { SerializerInterceptor } from 'src/common/interceptors';
@@ -10,6 +10,7 @@ import { LANGUAGE_DTO_PROPERTY_DESCRIPTION } from './languages.constants';
 import { LanguagesService } from './languages.service';
 
 @ApiTags('languages')
+@ApiBearerAuth()
 @Controller('languages')
 export class LanguagesController {
   constructor(private languagesService: LanguagesService) {}

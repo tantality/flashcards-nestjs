@@ -1,12 +1,13 @@
 import { Controller, Get, Body, Patch, NotFoundException, UseInterceptors } from '@nestjs/common';
 import { ObjectId } from 'mongoose';
-import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiNotFoundResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RESPONSE_STATUS_DESCRIPTION, USER_EXCEPTION_MESSAGE } from 'src/common/constants';
 import { SerializerInterceptor } from 'src/common/interceptors';
 import { UsersService } from './users.service';
 import { UpdateUserDto, UserResponseDto } from './dto';
 
 @ApiTags('users')
+@ApiBearerAuth()
 @Controller('users')
 export class UsersController {
   MOCK_USER_ID = '63a21c308ac9d6783208b8d7' as unknown as ObjectId;

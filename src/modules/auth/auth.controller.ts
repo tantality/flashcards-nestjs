@@ -10,7 +10,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { User, RefreshToken } from 'src/common/decorators';
+import { RefreshToken, CurrentUser } from 'src/common/decorators';
 import { RESPONSE_STATUS_DESCRIPTION } from 'src/common/constants';
 import { AuthService } from './services/auth.service';
 import { AuthResponseDto, LogInDto, SignUpDto } from './dto';
@@ -57,7 +57,7 @@ export class AuthController {
   @ApiNoContentResponse({ description: RESPONSE_STATUS_DESCRIPTION.NO_CONTENT })
   @ApiUnauthorizedResponse({ description: RESPONSE_STATUS_DESCRIPTION.UNAUTHORIZED })
   async logOut(
-    @User() payload: DecodedUserJwtPayload,
+    @CurrentUser() payload: DecodedUserJwtPayload,
       @RefreshToken() token: any,
       @Res({ passthrough: true }) res: Response,
   ): Promise<void> {
@@ -72,7 +72,7 @@ export class AuthController {
   @ApiUnauthorizedResponse({ description: RESPONSE_STATUS_DESCRIPTION.UNAUTHORIZED })
   @SkipAccessTokenCheck()
   async refreshTokens(
-    @User() payload: DecodedUserJwtPayload & { refreshTokenId: ObjectId },
+    @CurrentUser() payload: DecodedUserJwtPayload & { refreshTokenId: ObjectId },
       @Res({ passthrough: true }) res: Response,
   ): Promise<AuthResponseDto> {
     const { refreshTokenId: tokenId, userId, role } = payload;

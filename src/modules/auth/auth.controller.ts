@@ -1,7 +1,15 @@
-import { Controller, Post, Body, Res, Get, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Res, Get, UseGuards, HttpStatus, HttpCode } from '@nestjs/common';
 import { CookieOptions, Response } from 'express';
 import { ObjectId } from 'mongoose';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiNotFoundResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiNoContentResponse,
+  ApiNotFoundResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { User, RefreshToken } from 'src/common/decorators';
 import { RESPONSE_STATUS_DESCRIPTION } from 'src/common/constants';
 import { AuthService } from './services/auth.service';
@@ -44,7 +52,10 @@ export class AuthController {
   }
 
   @Get('log-out')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBearerAuth()
+  @ApiNoContentResponse({ description: RESPONSE_STATUS_DESCRIPTION.NO_CONTENT })
+  @ApiUnauthorizedResponse({ description: RESPONSE_STATUS_DESCRIPTION.UNAUTHORIZED })
   async logOut(
     @User() payload: DecodedUserJwtPayload,
       @RefreshToken() token: any,
@@ -58,6 +69,7 @@ export class AuthController {
 
   @Post('refresh-tokens')
   @UseGuards(RefreshTokenAuthGuard)
+  @ApiUnauthorizedResponse({ description: RESPONSE_STATUS_DESCRIPTION.UNAUTHORIZED })
   @SkipAccessTokenCheck()
   async refreshTokens(
     @User() payload: DecodedUserJwtPayload & { refreshTokenId: ObjectId },

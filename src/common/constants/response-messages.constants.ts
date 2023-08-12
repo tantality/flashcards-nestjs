@@ -35,4 +35,5 @@ export enum RESPONSE_STATUS_DESCRIPTION {
   NO_CONTENT = 'Ok, no content to return',
   NOT_FOUND = 'Resource not found',
   UNAUTHORIZED = 'Unauthorized',
+  FORBIDDEN = 'Forbidden',
 }

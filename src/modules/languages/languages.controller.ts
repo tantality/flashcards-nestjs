@@ -3,11 +3,13 @@ import { Body, Delete, Get, HttpCode, Param, Patch, Post, Query, UseGuards, UseI
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
+  ApiForbiddenResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOperation,
   ApiParam,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
 import { CONTROLLER_HANDLER_ACTION, LANGUAGE_EXCEPTION_MESSAGE, RESPONSE_STATUS_DESCRIPTION } from 'src/common/constants';
@@ -30,6 +32,7 @@ export class LanguagesController {
   @Get()
   @ApiOperation({ summary: 'Get a list of languages' })
   @ApiBadRequestResponse({ description: RESPONSE_STATUS_DESCRIPTION.BAD_REQUEST })
+  @ApiUnauthorizedResponse({ description: RESPONSE_STATUS_DESCRIPTION.UNAUTHORIZED })
   @UseInterceptors(new SerializerInterceptor(AllLanguagesResponseDto))
   async getAllLanguages(@Query() query: GetAllLanguagesQueryDto): Promise<AllLanguagesResponseDto> {
     const languagesAndTheirCount = await this.languagesService.findAndCountAll(query);
@@ -39,6 +42,7 @@ export class LanguagesController {
   @Get(':id')
   @ApiOperation({ summary: 'Get a language' })
   @ApiBadRequestResponse({ description: RESPONSE_STATUS_DESCRIPTION.BAD_REQUEST })
+  @ApiUnauthorizedResponse({ description: RESPONSE_STATUS_DESCRIPTION.UNAUTHORIZED })
   @ApiNotFoundResponse({ description: RESPONSE_STATUS_DESCRIPTION.NOT_FOUND })
   @ApiParam({ name: 'id', type: String, description: LANGUAGE_DTO_PROPERTY_DESCRIPTION.ID + CONTROLLER_HANDLER_ACTION.GET })
   @UseInterceptors(new SerializerInterceptor(LanguageResponseDto))
@@ -54,6 +58,8 @@ export class LanguagesController {
   @Post()
   @ApiOperation({ summary: 'Create a language' })
   @ApiBadRequestResponse({ description: RESPONSE_STATUS_DESCRIPTION.BAD_REQUEST })
+  @ApiUnauthorizedResponse({ description: RESPONSE_STATUS_DESCRIPTION.UNAUTHORIZED })
+  @ApiForbiddenResponse({ description: RESPONSE_STATUS_DESCRIPTION.FORBIDDEN })
   @Roles(USER_ROLE.ADMIN)
   @UseInterceptors(new SerializerInterceptor(LanguageResponseDto))
   async createLanguage(@Body() createLanguageDto: CreateLanguageDto): Promise<LanguageResponseDto> {
@@ -64,6 +70,8 @@ export class LanguagesController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update an existing language' })
   @ApiBadRequestResponse({ description: RESPONSE_STATUS_DESCRIPTION.BAD_REQUEST })
+  @ApiUnauthorizedResponse({ description: RESPONSE_STATUS_DESCRIPTION.UNAUTHORIZED })
+  @ApiForbiddenResponse({ description: RESPONSE_STATUS_DESCRIPTION.FORBIDDEN })
   @ApiNotFoundResponse({ description: RESPONSE_STATUS_DESCRIPTION.NOT_FOUND })
   @ApiParam({ name: 'id', type: String, description: LANGUAGE_DTO_PROPERTY_DESCRIPTION.ID + CONTROLLER_HANDLER_ACTION.UPDATE })
   @Roles(USER_ROLE.ADMIN)
@@ -81,6 +89,8 @@ export class LanguagesController {
   @ApiOperation({ summary: 'Delete a language' })
   @ApiNoContentResponse({ description: RESPONSE_STATUS_DESCRIPTION.NO_CONTENT })
   @ApiBadRequestResponse({ description: RESPONSE_STATUS_DESCRIPTION.BAD_REQUEST })
+  @ApiUnauthorizedResponse({ description: RESPONSE_STATUS_DESCRIPTION.UNAUTHORIZED })
+  @ApiForbiddenResponse({ description: RESPONSE_STATUS_DESCRIPTION.FORBIDDEN })
   @ApiNotFoundResponse({ description: RESPONSE_STATUS_DESCRIPTION.NOT_FOUND })
   @ApiParam({ name: 'id', type: String, description: LANGUAGE_DTO_PROPERTY_DESCRIPTION.ID + CONTROLLER_HANDLER_ACTION.DELETE })
   @Roles(USER_ROLE.ADMIN)

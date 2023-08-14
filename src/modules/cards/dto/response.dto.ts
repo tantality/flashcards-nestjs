@@ -1,6 +1,7 @@
-import { Exclude, Expose, instanceToPlain } from 'class-transformer';
+import { Exclude, Expose, instanceToPlain, Type } from 'class-transformer';
 import { ObjectId } from 'mongoose';
 import { ObjectIdToString } from 'src/common/decorators';
+import { Card } from '../card.schema';
 
 @Exclude()
 export class CardResponseDto {
@@ -35,4 +36,15 @@ export class CardResponseDto {
 }
 
 @Exclude()
-export class AllCardsResponseDto {}
+export class AllCardsResponseDto {
+  @Expose()
+  readonly count: number;
+
+  @Expose()
+  @Type(() => CardResponseDto)
+  readonly cards: Card[];
+
+  constructor(partial: Partial<AllCardsResponseDto>) {
+    Object.assign(this, partial);
+  }
+}

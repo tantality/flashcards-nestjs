@@ -30,6 +30,7 @@ export class CardsRepository {
     const { search, sortBy, sortDirection, limit, offset, languageId } = query;
 
     const findingCondition = this.createFindingConditionForCards({ userId, languageId, search });
+    const cardsCount = await this.countAll(findingCondition);
 
     return this.CARDS_SET;
   };
@@ -60,5 +61,10 @@ export class CardsRepository {
   private createLanguagesCondition = (languageId?: ObjectId): FilterQuery<Card> => {
     const languagesCondition = languageId ? { $or: [{ nativeLanguageId: languageId }, { foreignLanguageId: languageId }] } : {};
     return languagesCondition;
+  };
+
+  countAll = async (condition: FilterQuery<Card>): Promise<number> => {
+    const count = await this.cardModel.where(condition).countDocuments();
+    return count;
   };
 }

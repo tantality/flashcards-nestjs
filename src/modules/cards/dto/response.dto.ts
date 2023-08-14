@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose, instanceToPlain, Type } from 'class-transformer';
 import { ObjectId } from 'mongoose';
 import { ObjectIdToString } from 'src/common/decorators';
@@ -37,9 +38,11 @@ export class CardResponseDto {
 
 @Exclude()
 export class AllCardsResponseDto {
+  @ApiProperty({ description: 'The count of cards corresponding to the filtering condition in the query', example: 1 })
   @Expose()
   readonly count: number;
 
+  @ApiProperty({ description: 'The list of cards', type: [CardResponseDto] })
   @Expose()
   @Type(() => CardResponseDto)
   readonly cards: Card[];
